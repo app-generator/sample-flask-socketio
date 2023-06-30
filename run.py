@@ -6,6 +6,7 @@ Copyright (c) 2019 - present AppSeed.us
 import os
 from   flask_migrate import Migrate
 from   flask_minify  import Minify
+from   apps import socketio
 from   sys import exit
 
 from apps.config import config_dict
@@ -38,4 +39,5 @@ if DEBUG:
     app.logger.info('ASSETS_ROOT      = ' + app_config.ASSETS_ROOT )
 
 if __name__ == "__main__":
-    app.run()
+    # app.run()
+    socketio.run(app)

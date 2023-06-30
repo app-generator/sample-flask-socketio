@@ -10,6 +10,8 @@ from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from importlib import import_module
 
+from apps.events import socketio
+
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -54,4 +56,5 @@ def create_app(config):
     register_extensions(app)
     register_blueprints(app)
     configure_database(app)
+    socketio.init_app(app)
     return app
