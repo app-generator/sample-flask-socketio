@@ -4,16 +4,23 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from apps.home import blueprint
-from flask import render_template, request
+from flask import render_template, request, jsonify
 from flask_login import login_required
 from jinja2 import TemplateNotFound
+
+from apps.home.model import Sales
+from flask_socketio import emit
+from sqlalchemy.sql import func
+from apps import db
 
 
 @blueprint.route('/index')
 @login_required
 def index():
+    query = db.session.query(func.count(Sales.product), func.count(Sales.product).filter(Sales.status == 'Completed'))
+    sales = query.first()
 
-    return render_template('home/index.html', segment='index')
+    return render_template('home/index.html', segment='index', sales=sales)
 
 
 @blueprint.route('/<template>')
@@ -52,3 +59,17 @@ def get_segment(request):
 
     except:
         return None
+
+
+@blueprint.route('/sales', methods=['POST'])
+def add_sale():
+    print(request.form)
+
+    sale = Sales(**request.form)
+    sale.save()
+
+    query = db.session.query(func.count(Sales.product), func.count(Sales.product).filter(Sales.status == 'Completed'))
+    result = query.first()
+    data = {'total-sales': result[0], 'sales-completed': result[1]},
+    emit('sales', data, broadcast=True, namespace='/')
+    return jsonify(dict(**request.form), 200)

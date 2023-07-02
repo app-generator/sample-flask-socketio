@@ -18,8 +18,11 @@ login_manager = LoginManager()
 
 
 def register_extensions(app):
+    from apps.home.model import Sales
+
     db.init_app(app)
     login_manager.init_app(app)
+    socketio.init_app(app)
 
 
 def register_blueprints(app):
@@ -56,5 +59,4 @@ def create_app(config):
     register_extensions(app)
     register_blueprints(app)
     configure_database(app)
-    socketio.init_app(app)
     return app

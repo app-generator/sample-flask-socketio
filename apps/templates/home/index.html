@@ -16,9 +16,9 @@
                 <div class="col-md-6 col-xl-3">
                     <div class="card bg-c-blue order-card">
                         <div class="card-body">
-                            <h6 class="text-white">Orders Received</h6>
-                            <h2 class="text-end text-white"><i class="feather icon-shopping-cart float-start"></i><span>486</span></h2>
-                            <p class="m-b-0">Completed Orders<span class="float-end">351</span></p>
+                            <h6 class="text-white">Orders Received</h6> <!--486, 351-->
+                            <h2 class="text-end text-white"><i class="feather icon-shopping-cart float-start"></i><span id="total-sales">{{sales[0]}}</span></h2>
+                            <p class="m-b-0">Completed Orders<span class="float-end" id="sales-completed">{{sales[1]}}</span></p>
                         </div>
                     </div>
                 </div>
@@ -1599,6 +1599,31 @@
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
+
+    <!-- socketio script tag -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+    <script type="text/javascript" charset="utf-8">
+        const socket = io();
+        socket.on('connect', function(data) {
+            // Handle the received data
+            console.log('I am connected!!!');
+          });
+        socket.send('The send method is used to initiate the message event');
+        socket.emit('new event', 'The data can be an object or a string');
+
+        socket.on('server event', function(data) {
+            console.log(data);
+        });
+
+        socket.on('sales', function(data) {
+            // console.log(data);
+            const total_sales = document.getElementById('total-sales');
+            const sales_completed = document.getElementById('sales-completed');
+
+            total_sales.innerHTML = data['total-sales'];
+            sales_completed.innerHTML = data['sales-completed'];
+        });
+    </script>
 
     <!-- Apex Chart -->
     <script src="/static/assets/js/plugins/apexcharts.min.js"></script>
