@@ -1,5 +1,10 @@
 # Change Log
 
+## [1.0.10] 2023-07-03
+### Changes
+
+- Added [SocketIO Code](https://docs.appseed.us/technologies/flask/socketio/)
+
 ## [1.0.9] 2023-01-02
 ### Changes
 
